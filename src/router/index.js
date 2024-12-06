@@ -3,6 +3,7 @@ import { useAuthStore, useAlertStore } from '@/stores';
 import { Home } from '@/views';
 import accountRoutes from './account.routes';
 import usersRoutes from './users.routes';
+import pokemonsRoutes from './pokemons.routes';
 
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,6 +12,7 @@ export const router = createRouter({
     { path: '/', component: Home },
     { ...accountRoutes },
     { ...usersRoutes },
+    { ...pokemonsRoutes },
     // 매칭이 되지 않는 URL로 접근 시 마지막 path인 "/:pathMatch(.*)*"로 적용된다.
     { path: '/:pathMatch(.*)*', redirect: '/' }
   ]
