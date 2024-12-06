@@ -9,7 +9,7 @@ on:
 
 env:
   DOCKER_IMAGE: springbootvuejs
-  DOCKER_TAG: vuejs_v2
+  DOCKER_TAG: vuejs_v3
   
 jobs:
   Docker:
