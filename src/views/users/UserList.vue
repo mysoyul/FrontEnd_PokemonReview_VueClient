@@ -20,8 +20,10 @@
                     <td>{{ user.username }}</td>
                     <td>{{ user.role }}</td>
                     <td style="white-space: nowrap">
-                        <router-link :to="`/users/edit/${user.id}`" class="btn btn-sm btn-primary mr-1">Edit</router-link>
-                        <button @click="usersStore.delete(user.id)" class="btn btn-sm btn-danger btn-delete-user" :disabled="user.isDeleting">
+                        <router-link :to="`/users/edit/${user.id}`"
+                            class="btn btn-sm btn-primary mr-1">Edit</router-link>
+                        <button @click="usersStore.delete(user.id)" class="btn btn-sm btn-danger btn-delete-user"
+                            :disabled="user.isDeleting">
                             <span v-if="user.isDeleting" class="spinner-border spinner-border-sm"></span>
                             <span v-else>Delete</span>
                         </button>
@@ -35,57 +37,42 @@
             </tr>
             <tr v-if="users.error">
                 <td colspan="4">
-                    <div class="text-danger">Error loading users: {{users.error}}</div>
+                    <div class="text-danger">Error loading users: {{ users.error }}</div>
                 </td>
-            </tr>            
+            </tr>
         </tbody>
     </table>
     <nav class="mt-5" aria-label="Page navigation example">
-			<ul class="pagination justify-content-center">
-				<li class="page-item" :class="{ disabled: !(params.pageNo > 1) }">
-					<a
-						class="page-link"
-						href="#"
-						aria-label="Previous"
-						@click.prevent="--params.pageNo">
-						<span aria-hidden="true">&laquo;</span>
-					</a>
-				</li>
-                <template v-if="pageCount >= 1">
-				<li
-					v-for="page in pageCount"
-					:key="page"
-					class="page-item"
-					:class="{ active: params.pageNo === page }">
-					<a class="page-link" href="#" @click.prevent="params.pageNo = page">{{
-						page
-					}}</a>
-				</li>
-                </template>
-				<li
-					class="page-item"
-					:class="{ disabled: !(params.pageNo < pageCount) }">
-					<a
-						class="page-link"
-						href="#"
-						aria-label="Next"
-						@click.prevent="++params.pageNo"
-					>
-						<span aria-hidden="true">&raquo;</span>
-					</a>
-				</li>
-			</ul>
-	</nav>
+        <ul class="pagination justify-content-center">
+            <li class="page-item" :class="{ disabled: !(params.pageNo > 1) }">
+                <a class="page-link" href="#" aria-label="Previous" @click.prevent="--params.pageNo">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <template v-if="pageCount >= 1">
+                <li v-for="page in pageCount" :key="page" class="page-item" :class="{ active: params.pageNo === page }">
+                    <a class="page-link" href="#" @click.prevent="params.pageNo = page">{{
+                        page
+                    }}</a>
+                </li>
+            </template>
+            <li class="page-item" :class="{ disabled: !(params.pageNo < pageCount) }">
+                <a class="page-link" href="#" aria-label="Next" @click.prevent="++params.pageNo">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 </template>
 
 <script setup>
-import { ref, reactive, watch, computed, onMounted } from 'vue';
+import { reactive, watch, computed, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useUsersStore } from '@/stores';
 
 const params = reactive({
-	pageNo: 0,
-	pageSize: 2
+    pageNo: 0,
+    pageSize: 2
 });
 
 const usersStore = useUsersStore();
@@ -93,24 +80,25 @@ const { users, pageInfo } = storeToRefs(usersStore);
 
 //Math.ceil() 소수값이 존재할 때 값을 올리는 함수
 const pageCount = computed(() =>
-	Math.ceil(pageInfo.value.totalElements / params.pageSize),
+    Math.ceil(pageInfo.value.totalElements / params.pageSize),
 );
 
+//lifecycle hook
 onMounted(() => {
     fetchData();
 });
 
 const fetchData = () => {
-    if(params.pageNo >= 1){
+    if (params.pageNo >= 1) {
         console.log('pageNo가 1보다 크면 빼기')
         const newParams = {
             ...params,
             pageNo: params.pageNo - 1
         }
         usersStore.getAll(newParams)
-    }else {
+    } else {
         usersStore.getAll(params)
-    }    
+    }
 }
 
 watch(() => params.pageNo, fetchData)
